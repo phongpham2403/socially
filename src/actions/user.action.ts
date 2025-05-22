@@ -153,7 +153,7 @@ export async function toggleFollow(targetUserId: string) {
       ]);
     }
 
-    revalidatePath("/");
+     
     return { success: true };
   } catch (error) {
     console.log("Error in toggleFollow", error);
