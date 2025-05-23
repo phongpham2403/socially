@@ -1,16 +1,17 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
+import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
+import { Button } from "./ui/button";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
+import ImageUpload from "./ImageUpload";
 
-const CreatePost = () => {
+function CreatePost() {
   const { user } = useUser();
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -18,18 +19,22 @@ const CreatePost = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
 
   const handleSubmit = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() && !imageUrl) return;
+
     setIsPosting(true);
     try {
       const result = await createPost(content, imageUrl);
       if (result?.success) {
+        // reset the form
         setContent("");
         setImageUrl("");
-        setIsPosting(false);
-        toast.success("Post successfully !!");
+        setShowImageUpload(false);
+
+        toast.success("Post created successfully");
       }
     } catch (error) {
-      toast.error("Post failed");
+      console.error("Failed to create post:", error);
+      toast.error("Failed to create post");
     } finally {
       setIsPosting(false);
     }
@@ -45,7 +50,7 @@ const CreatePost = () => {
             </Avatar>
             <Textarea
               placeholder="What's on your mind?"
-              className="min-h-[100px] resize-none border-none focus-visible:ring-0 px-4 py-2 text-base"
+              className="min-h-[100px] resize-none border-none focus-visible:ring-0 p-0 text-base"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               disabled={isPosting}
@@ -54,14 +59,15 @@ const CreatePost = () => {
 
           {(showImageUpload || imageUrl) && (
             <div className="border rounded-lg p-4">
-              {/* <ImageUpload
-                endpoint="postImage"
+              <ImageUpload
+                endpoint="imageUploader"
                 value={imageUrl}
                 onChange={(url) => {
+                  console.log(url);
                   setImageUrl(url);
                   if (!url) setShowImageUpload(false);
                 }}
-              /> */}
+              />
             </div>
           )}
 
@@ -101,6 +107,5 @@ const CreatePost = () => {
       </CardContent>
     </Card>
   );
-};
-
+}
 export default CreatePost;

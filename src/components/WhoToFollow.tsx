@@ -10,7 +10,7 @@ const WhoToFollow = async () => {
   if (users.length === 0) return null;
 
   return (
-    <Card>
+    <Card className="sticky">
       <CardHeader>
         <CardTitle>Who to Follow</CardTitle>
       </CardHeader>
