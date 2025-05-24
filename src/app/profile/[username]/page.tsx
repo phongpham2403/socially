@@ -28,7 +28,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProfilePageServer({ params }: ProfileProps) {
+async function ProfilePageServer({ params }: ProfileProps) {
   const user = await getProfileByUsername(params.username);
 
   if (!user) notFound();
@@ -48,3 +48,5 @@ export default async function ProfilePageServer({ params }: ProfileProps) {
     />
   );
 }
+
+export default ProfilePageServer;
