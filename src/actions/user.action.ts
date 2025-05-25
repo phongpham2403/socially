@@ -152,7 +152,7 @@ export async function toggleFollow(targetUserId: string) {
         }),
       ]);
     }
-
+    revalidatePath("/");
      
     return { success: true };
   } catch (error) {
